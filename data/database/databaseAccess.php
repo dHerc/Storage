@@ -73,7 +73,7 @@ abstract class DatabaseAccess
 	}
 	private static function connect()
 	{
-		$polaczenie = new \mysqli(Connection::host, Connection::user, Connection::password, Connection::name);
+		$polaczenie = new \mysqli(Connection::$host, Connection::$user, Connection::$password, Connection::$name);
 		if ($polaczenie->connect_errno!=0)
 		{
 			//signal error
