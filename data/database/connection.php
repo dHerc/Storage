@@ -1,5 +1,6 @@
 <?php
 namespace Storage\Data\Database;
+
 abstract class Connection
 {
 	const host = "localhost";

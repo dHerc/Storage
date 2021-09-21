@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 namespace Storage\Data;
+
 abstract class Status
 {
 	private static $status_names = array(

@@ -8,10 +8,13 @@
 <body>
 <?php
 session_start();
-require 'users/logincheck.php';
+
+require 'login/logincheck.php';
 require 'controll/manageItems.php';
+
 use Storage\Data\AllItems as Items;
 use Storage\Controll\ManageItems as Manage;
+
 if($loged==true)
 {
 	$items = new Items();

@@ -1,47 +1,65 @@
 <?php declare(strict_types=1);
 namespace Storage\Data\Database;
+
 require 'connection.php';
+
 abstract class DatabaseAccess
 {
-	public static function getItems()
+	public static function getBy(string $name, array $conditions = array())
 	{
-		$connection = DatabaseAccess::connect();
-		if($connection)
-			$items = $connection->query("SELECT * FROM items");
-		else
-			$items = null;
-		return $items;
-	}
-	public static function addItem(
-	string $title,
-	string $description,
-	int $status): int
-	{
-		$connection = DatabaseAccess::connect();
+		$connection = self::connect();
 		if($connection)
 		{
-			$connection->query("INSERT INTO `items` (`title`, `desc`, `status`) VALUES ('$title', '$description', '$status')");
+			$query = "SELECT * FROM $name";
+			$query.=self::addConditions($conditions);
+			$result = ($connection->query($query));
+		}
+		else
+		{
+			$result = null;
+		}
+		return $result;
+	}
+	public static function add(string $name, array $data = array()): int
+	{
+		$connection = self::connect();
+		if($connection)
+		{
+			$query = "INSERT INTO $name";
+			if(!empty($data))
+			{
+				$fields = "";
+				$values = "";
+				foreach($data as $field => $value)
+				{
+					$fields.= "`$field`,";
+					$values.= "'$value',";
+				}
+				$query.= " (".substr($fields,0,-1).") VALUES (".substr($values,0,-1).")";
+			}
+			$connection->query($query);
 			$id = $connection->insert_id;
 		}
 		else
+		{
 			$id = null;
+		}
 		return $id;
 	}
-	public static function editItem(
-	int $id,
-	string $title,
-	string $description,
-	int $status
-	)
+	public static function edit(string $name, array $data, array $conditions = array())
 	{
-		$connection = DatabaseAccess::connect();
+		$connection = self::connect();
 		if($connection)
 		{
-			$connection->query("UPDATE `items` SET".
-			((strlen($title)>0)?"`title` = '$title',":"").
-			((strlen($description)>0)?"`desc` = '$description',":"").
-			"`status` = '$status'".
-			"WHERE `items`.`id` = $id");
+			$query = "UPDATE $name SET";
+			$sets = "";
+			foreach($data as $field => $value)
+			{
+				$sets.="`$field`='$value',";
+			}
+			$query.=substr($sets,0,-1);
+			$query.=self::addConditions($conditions);
+			$connection->query($query);
 			if($connection->connect_errno)
 				return false;
 			return true;
@@ -49,12 +67,14 @@ abstract class DatabaseAccess
 		else
 			return false;
 	}
-	public static function removeItem(int $id)
+	public static function remove(string $name, array $conditions = array())
 	{
-		$connection = DatabaseAccess::connect();
+		$connection = self::connect();
 		if($connection)
 		{
-			$connection->query("DELETE FROM `items` WHERE `items`.`id` = $id");
+			$query = "DELETE FROM $name";
+			$query.=self::addConditions($conditions);
+			$connection->query($query);
 			if($connection->connect_errno)
 				return false;
 			return true;
@@ -62,14 +82,24 @@ abstract class DatabaseAccess
 		else
 			return false;
 	}
-	public static function getUser(string $username)
+	private static function addConditions(array $conditions): string
 	{
-		$connection = DatabaseAccess::connect();
-		if($connection)
-			$user = $connection->query("SELECT * FROM users WHERE `username` = '$username'")->fetch_assoc();
-		else
-			$user = null;
-		return $user;
+		$query = "";
+		$first = true;
+		foreach($conditions as $field => $value)
+		{
+			if($first)
+			{
+				$query.=" WHERE ";
+				$first = false;
+			}
+			else
+			{
+				$query.=" AND ";
+			}
+			$query.="$field='$value'";
+		}
+		return $query;
 	}
 	private static function connect()
 	{

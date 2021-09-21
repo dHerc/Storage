@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 namespace Storage\Controll;
+
 require $_SERVER['DOCUMENT_ROOT'].'/data/allItems.php';
 require $_SERVER['DOCUMENT_ROOT'].'/data/database/databaseAccess.php';
+
 use Storage\Data\AllItems as Items;
 use Storage\Data\Database\DatabaseAccess as DBAccess;
 use Storage\Data\Item as Item;
+
 class ManageItems
 {
 	private Items $items;
@@ -22,7 +25,7 @@ class ManageItems
 	}
 	public function updateItems(): void
 	{
-		$new_items = DBAccess::getItems();
+		$new_items = DBAccess::getBy("items");
 		if($new_items)
 		{
 			$items = array();
@@ -38,7 +41,10 @@ class ManageItems
 	string $description,
 	int $status): bool
 	{
-		$id = DBAccess::addItem($title,$description,$status);
+		$id = DBAccess::add("items",
+							array("title" => $title,
+								  "desc" => $description,
+								  "status" => $status));
 		if($id)
 			$this->items->editItem(new Item($id,$title,$description,$status));
 		else
@@ -51,7 +57,15 @@ class ManageItems
 	string $description,
 	int $status): bool
 	{
-		$success = DBAccess::editItem($id,$title,$description,$status);
+		$changes = array();
+		if(strlen($title)>0)
+			$changes["title"]=$title;
+		if(strlen($description)>0)
+			$changes["desc"]=$description;
+		$changes["status"] = $status;
+		$success = DBAccess::edit("items", 
+								  $changes, 
+								  array("id" => $id));
 		if($success)
 			$this->items->editItem(new Item($id,$title,$description,$status));
 		else
@@ -60,7 +74,7 @@ class ManageItems
 	}
 	public function removeItem(int $id): bool
 	{
-		$success = DBAccess::removeItem($id);
+		$success = DBAccess::remove("items", array("id" => $id));
 		if($success)
 			$this->items->removeItem($id);
 		else
