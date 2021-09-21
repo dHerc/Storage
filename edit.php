@@ -1,10 +1,13 @@
 <?php
 session_start();
-require 'users/logincheck.php';
+
+require 'login/logincheck.php';
 require 'controll/manageItems.php';
-use Storage\Controll\ManageItems as Manage;
 require 'data/status.php';
+
+use Storage\Controll\ManageItems as Manage;
 use Storage\Data\Status as Status;
+
 if($loged==true)
 {
 	$manage = unserialize($_SESSION["item_manage"]);

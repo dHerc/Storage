@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<style>
+p {
+  font-size: 300%;
+  text-align: center;
+}
+</style>
 <?php
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)
 {
@@ -7,7 +14,7 @@ else
 {
 	$loged = false;
 	echo '
-	<br><button onClick = "login()">Zaloguj sie</button>
+	<br><p><button onClick = "login()">Zaloguj sie</button></p>
 	<script>
 	function login()
 	{
@@ -15,3 +22,4 @@ else
 	}
 	</script>';
 }
+?>

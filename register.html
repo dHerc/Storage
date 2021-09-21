@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Login Form</title>
+  <title>Register Form</title>
 <style>
 p {
   font-size: 300%;
@@ -33,19 +33,20 @@ button {
 <body>
   <section class="container">
     <div class="login">
-      <h1>Logowanie</h1>
-      <form method="post" action="login/login.php">
+      <h1>Rejestracja</h1>
+      <form method="post" action="login/register.php">
         <p><input type="text" name="username" value="" placeholder="Nazwa użytkownika"></p>
-        <p><input type="password" name="password" value="" placeholder="Hasło"></p>
-        <p class="submit"><input type="submit" name="commit" value="Zaloguj"></p>
+        <p><input type="password" name="password1" value="" placeholder="Hasło"></p>
+		<p><input type="password" name="password2" value="" placeholder="Powtórz hasło"></p>
+        <p class="submit"><input type="submit" name="commit" value="Zarejestruj"></p>
       </form>
     </div>
 	</section>
-	<p><button class = "button" onClick = "register()">Rejestracja</button></p>
+	<p><button class = "button" onClick = "login()">Logowanie</button></p>
 <script>
-function register()
+function login()
 {
-window.open(window.location.protocol + "//" + window.location.host + "/register.html","_parent");
+window.open(window.location.protocol + "//" + window.location.host + "/login.html","_parent");
 }
 </script>
 </body>

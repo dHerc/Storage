@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 namespace Storage\Data;
+
 require 'item.php';
+
 use Storage\Data\Item as Item;
+
 class AllItems
 {
 	private $items = array();
