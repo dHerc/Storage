@@ -103,8 +103,8 @@ abstract class DatabaseAccess
 	}
 	private static function connect()
 	{
-		$connection = new \mysqli(Connection::host, Connection::user, Connection::password, Connection::name);
-		if ($connection->connect_errno!=0)
+		$connection = new \mysqli(Connection::$host, Connection::$user, Connection::$password, Connection::$name);
+		if ($polaczenie->connect_errno!=0)
 		{
 			//signal error
 		}
